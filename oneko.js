@@ -90,11 +90,11 @@
     nekoEl.style.width = "32px";
     nekoEl.style.height = "32px";
     nekoEl.style.position = "fixed";
-    nekoEl.style.pointerEvents = "none";
+    nekoEl.style.pointerEvents = "auto";
     nekoEl.style.imageRendering = "pixelated";
     nekoEl.style.left = `${nekoPosX - 16}px`;
     nekoEl.style.top = `${nekoPosY - 16}px`;
-    nekoEl.style.zIndex = 2147483647;
+    nekoEl.style.zIndex = Number.MAX_VALUE;
 
     let nekoFile = "./oneko.gif"
     const curScript = document.currentScript
@@ -149,7 +149,7 @@
       Math.floor(Math.random() * 200) == 0 &&
       idleAnimation == null
     ) {
-      let avalibleIdleAnimations = ["sleeping", "scratchSelf"];
+      let avalibleIdleAnimations = ["scratchSelf"];
       if (nekoPosX < 32) {
         avalibleIdleAnimations.push("scratchWallW");
       }
@@ -164,7 +164,7 @@
       }
       idleAnimation =
         avalibleIdleAnimations[
-          Math.floor(Math.random() * avalibleIdleAnimations.length)
+        Math.floor(Math.random() * avalibleIdleAnimations.length)
         ];
     }
 
@@ -195,6 +195,24 @@
     }
     idleAnimationFrame += 1;
   }
+
+  function explodeHearts() {
+    let sleepCount = 0;
+    let sleepFrame = 0;
+    
+    const sleepInterval = setInterval(() => {
+        if (sleepCount >= 8) { // 4 cycles (2 frames per cycle)
+            setSprite('idle', 0);
+            clearInterval(sleepInterval);
+            return;
+        }
+        
+        setSprite('sleeping', sleepFrame);
+        sleepFrame = (sleepFrame + 1) % 2;
+        sleepCount++;
+    }, 200);
+}
+  nekoEl.addEventListener('click', explodeHearts);
 
   function frame() {
     frameCount += 1;
